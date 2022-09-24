@@ -9,9 +9,17 @@ import json
 from cunghoangdao1 import hoang_dao
 from get_imotion import get_imotion
 from thoitiet import getWeather
-myclient = pymongo.MongoClient("mongodb+srv://root:eZcu9qthj7GgmNMY@smartourist.foiibut.mongodb.net/")
 start_col = 7
-mydb = myclient["SmartTourist"]
+
+myclient = pymongo.MongoClient("mongodb+srv://root:eZcu9qthj7GgmNMY@smartourist.foiibut.mongodb.net/")
+mydb = myclient['Smartourist']
+print(myclient.list_database_names())
+mycol = mydb["dataDestination"]
+list_dict = []
+for x in mycol.find():
+    list_dict.append(x)
+data = pd.DataFrame.from_dict(list_dict)
+data.head()
 print(myclient.list_database_names())
 collist = mydb.list_collection_names()
 print(collist)
@@ -24,19 +32,21 @@ input_api = {
     "day_of_birth": ""  # 24/3
 }
 
-data = pd.DataFrame()
-mycol = mydb["dataDestination"]
-index = 0
-for x in mycol.find(): # ko query điều kiện nào và lấy tất cả các field
-    # xs = x
-    m = pd.DataFrame(x,index=[index])
-    index+=1
-    data = pd.concat([data,m], axis=0)
+# data = pd.DataFrame()
+# mycol = mydb["dataDestination"]
+# index = 0
+# for x in mycol.find(): # ko query điều kiện nào và lấy tất cả các field
+#     # xs = x
+#     m = pd.DataFrame(x,index=[index])
+#     index+=1
+#     data = pd.concat([data,m], axis=0)
+
 data.dropna(inplace=True)
 for col in data.columns[start_col:]:
     data[col] = data[col].astype(float)
     print(col)
 print("col")
+
 api_string = [0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0,
               1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1]
 
