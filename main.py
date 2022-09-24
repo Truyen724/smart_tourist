@@ -9,7 +9,7 @@ import json
 from cunghoangdao1 import hoang_dao
 from get_imotion import get_imotion
 from thoitiet import getWeather
-myclient = pymongo.MongoClient("mongodb://localhost:27017/")
+myclient = pymongo.MongoClient("mongodb+srv://root:eZcu9qthj7GgmNMY@smartourist.foiibut.mongodb.net/")
 start_col = 7
 mydb = myclient["SmartTourist"]
 print(myclient.list_database_names())
