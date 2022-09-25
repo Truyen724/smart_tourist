@@ -9,6 +9,8 @@ import json
 from cunghoangdao1 import hoang_dao
 from get_imotion import get_imotion
 from thoitiet import getWeather
+from flask_cors import CORS 
+
 start_col = 7
 
 myclient = pymongo.MongoClient("mongodb+srv://root:eZcu9qthj7GgmNMY@smartourist.foiibut.mongodb.net/")
@@ -69,7 +71,7 @@ def get_top_sim(top: int, api_string_get):
 # get_top_sim(10,api_string)
 app = Flask(__name__)
 
-
+CORS(app)
 @app.route('/predict', methods=['POST'])
 def make_prediction():
     if request.method == 'POST':
