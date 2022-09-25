@@ -48,7 +48,7 @@ for col in data.columns[start_col:]:
 print("col")
 
 api_string = [0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0,
-              1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1]
+        1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1]
 
 
 def get_cosin(x):
@@ -56,10 +56,13 @@ def get_cosin(x):
     return cos_sim
 
 
-def get_top_sim(top: int, api_string):
-    api_string = api_string
-    data["result"] = data[data.columns[start_col:]].apply(get_cosin, axis=1)
+def get_top_sim(top: int, api_string_get):
+    
+    api_string = api_string_get
+    data[data.columns[start_col:]].shape
+    data["result"] = data[data.columns[start_col:36]].apply(get_cosin, axis=1)
     k = data.sort_values("result", ascending=False).head(top)[['ID', 'Name', 'ADDRESS', 'ADDRESS_LINK','IMG2']].to_json(orient = "records",force_ascii = False)
+    
     return k
 
 
@@ -73,6 +76,7 @@ def make_prediction():
         body = json.loads(request.data)
         # print(body)
         # print(type(body))
+
         dict = {}
         for col in data.columns[start_col:]:
             # print(col)
@@ -94,9 +98,9 @@ def make_prediction():
         dict["MORNING_A_NIGHT"] = 1
         print(list(dict.values()))
         lst_binary = list(dict.values())
-        output = get_top_sim(10,lst_binary)
+        output = get_top_sim(30,lst_binary)
+        
         return output
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host = "0.0.0.0",debug=True, port = 4999)
