@@ -57,14 +57,30 @@ def get_cosin(x):
     cos_sim = dot(api_string, x)/(norm(api_string)*norm(x))
     return cos_sim
 
+def get_lat(x):
+    lst = x.split("/")
+    lat_long = [x for x in lst if "@" in x ]
+    lat_long = lat_long[0].split(",")
+    lat_long[0] = lat_long[0].replace("@","")
+    lat = lat_long[0]
+    return lat
+
+def get_long(x):
+    lst = x.split("/")
+    lat_long = [x for x in lst if "@" in x ]
+    lat_long = lat_long[0].split(",")
+    long= lat_long[1].replace("@","")
+    return long
 
 def get_top_sim(top: int, api_string_get):
     
     api_string = api_string_get
     data[data.columns[start_col:]].shape
     data["result"] = data[data.columns[start_col:36]].apply(get_cosin, axis=1)
-    k = data.sort_values("result", ascending=False).head(top)[['ID', 'Name', 'ADDRESS', 'ADDRESS_LINK','IMG2']].to_json(orient = "records",force_ascii = False)
-    
+    out = data.sort_values("result", ascending=False).head(top)[['ID', 'Name', 'ADDRESS', 'ADDRESS_LINK','IMG2']]
+    out["lat"] = out["ADDRESS_LINK"].apply(get_lat)
+    out["long"] = out["ADDRESS_LINK"].apply(get_long)
+    k = out.to_json(orient = "records",force_ascii = False)
     return k
 
 
