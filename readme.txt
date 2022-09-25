@@ -3,6 +3,8 @@ python main.py
 
 API predict 
 
+http://14.225.210.47:4999/predict
+method post
 {
     "image": "",  		#picture base68
     "color": "",  		# RED, YELLOW, SKYBLUE, GREEN, PINK, PURPLE,BROWN, ORANGE
@@ -12,10 +14,10 @@ API predict
     "day_of_birth": ""  	# 24/3
 }
 
-API trả về: 'ID', 'Name', 'ADDRESS', 'ADDRESS_LINK','IMG2'
-
 ví dụ cho api
 
+http://14.225.210.47:4999/predict
+method post
 {
     "image": "xxx",  		
     "color": "RED",  		
@@ -24,3 +26,15 @@ ví dụ cho api
     "day_or_night": "NIGHT", 	
     "day_of_birth": "24/3"  	
 }
+API trả về
+
+{
+	'ID':		#ID của khu du lịch
+	'Name': 	#Tên khu du lịch
+	'ADDRESS':  	#Địa chỉ
+	'ADDRESS_LINK': #Link google map
+	'IMG2': 	#Link hình ảnh
+}
+
+
+
