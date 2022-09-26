@@ -55,6 +55,7 @@ api_string = [0, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 0, 0,
 
 def get_cosin(x):
     cos_sim = dot(api_string, x)/(norm(api_string)*norm(x))
+    
     return cos_sim
 
 def get_lat(x):
@@ -76,6 +77,7 @@ def get_top_sim(top: int, api_string_get):
     
     global api_string
     api_string = api_string_get
+
     data[data.columns[start_col:]].shape
     data["result"] = data[data.columns[start_col:36]].apply(get_cosin, axis=1)
     out = data.sort_values("result", ascending=False).head(top)[['ID', 'Name', 'ADDRESS', 'ADDRESS_LINK','IMG2']]
@@ -97,7 +99,7 @@ def make_prediction():
         # print(type(body))
 
         dict = {}
-        for col in data.columns[start_col:]:
+        for col in data.columns[start_col:36]:
             # print(col)
             dict[col] = 0
         thoitiet = getWeather(body["weather"],body["temperature"])
