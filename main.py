@@ -74,7 +74,8 @@ def get_long(x):
 
 def get_top_sim(top: int, api_string_get):
     
-    global api_string = api_string_get
+    global api_string
+    api_string = api_string_get
     data[data.columns[start_col:]].shape
     data["result"] = data[data.columns[start_col:36]].apply(get_cosin, axis=1)
     out = data.sort_values("result", ascending=False).head(top)[['ID', 'Name', 'ADDRESS', 'ADDRESS_LINK','IMG2']]
