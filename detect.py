@@ -82,7 +82,7 @@ def detect_face(img):
     return list_category[np.argmax(pred[0])]
 
     
-def mask_detect(image):
+def mask_detect(image, rectangle = False):
     
     img = image.copy()
     (h,w) = img.shape[:2]
@@ -124,8 +124,9 @@ def mask_detect(image):
         # label="{}: {:.2f}%".format(label,max(mask,withoutMask)*100)
         
         #display the label and bounding boxes
-        # cv2.putText(img,label,(startX,startY-10),cv2.FONT_HERSHEY_SIMPLEX,0.45,color,2)
-        # cv2.rectangle(img,(startX,startY),(endX,endY),color,2)
+        if(rectangle):
+            cv2.putText(img,label,(startX,startY-10),cv2.FONT_HERSHEY_SIMPLEX,0.45,color,2)
+            cv2.rectangle(img,(startX,startY),(endX,endY),color,2)
         
     return img, arr_emotion
 
@@ -183,7 +184,7 @@ def main():
         # Our operations on the frame come here
         # frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         arr=[]
-        frame, arr = mask_detect(frame)
+        frame, arr = mask_detect(frame, rectangle=True)
         print(arr)
         # Display the resulting frame
         cv2.imshow('frame', frame)
@@ -195,5 +196,5 @@ def main():
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    # main()
+    main()
     detect_face_base64_mask(img_base64_3)
