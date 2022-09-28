@@ -132,6 +132,7 @@ def make_prediction():
         lst_binary = list(dict.values())
         output = get_top_sim(30,lst_binary)
         output["emotion"] = str(list_emotion)
+        print(list_emotion)
         now = time.time()
         print("Tixxxxxxxxxxxxme:",now - program_starts)
         return output.to_json(orient = "records",force_ascii = False)
