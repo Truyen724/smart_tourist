@@ -7,12 +7,12 @@ from flask import Flask
 from flask import request
 import json
 from cunghoangdao1 import hoang_dao
-from get_imotion import get_imotion
+# from get_imotion import get_imotion
 from thoitiet import getWeather
 from flask_cors import CORS 
-
+from detect import detect_face_base64_mask
 start_col = 7
-
+import time
 myclient = pymongo.MongoClient("mongodb+srv://root:eZcu9qthj7GgmNMY@smartourist.foiibut.mongodb.net/")
 mydb = myclient['Smartourist']
 print(myclient.list_database_names())
@@ -44,6 +44,7 @@ input_api = {
 #     data = pd.concat([data,m], axis=0)
 
 data.dropna(inplace=True)
+data['contemp'] = 0
 for col in data.columns[start_col:]:
     data[col] = data[col].astype(float)
     print(col)
@@ -83,8 +84,8 @@ def get_top_sim(top: int, api_string_get):
     out = data.sort_values("result", ascending=False).head(top)[['ID', 'Name', 'ADDRESS', 'ADDRESS_LINK','IMG2']]
     out["lat"] = out["ADDRESS_LINK"].apply(get_lat)
     out["long"] = out["ADDRESS_LINK"].apply(get_long)
-    k = out.to_json(orient = "records",force_ascii = False)
-    return k
+    
+    return out
 
 
 # get_top_sim(10,api_string)
@@ -93,6 +94,7 @@ app = Flask(__name__)
 CORS(app)
 @app.route('/predict', methods=['POST'])
 def make_prediction():
+    program_starts = time.time()
     if request.method == 'POST':
         body = json.loads(request.data)
         # print(body)
@@ -102,6 +104,15 @@ def make_prediction():
         for col in data.columns[start_col:36]:
             # print(col)
             dict[col] = 0
+
+        list_emotion = []
+        try:
+            list_emotion = detect_face_base64_mask(body["image"])
+        except:
+            pass
+        for emo in list_emotion:
+            dict[emo] = 0
+        
         thoitiet = getWeather(body["weather"],body["temperature"])
         for tt in thoitiet:
             dict[tt] = 1
@@ -113,15 +124,17 @@ def make_prediction():
         dict[chd]= 1
         print(chd)
         print(dict)
-        emote = get_imotion(body["image"])
+        # emote = get_imotion(body["image"])
         dict["ANY_TIME"] = 1
-        dict[emote] = 1
+        # dict[emote] = 1
         dict["MORNING_A_NIGHT"] = 1
         print(list(dict.values()))
         lst_binary = list(dict.values())
         output = get_top_sim(30,lst_binary)
-        
-        return output
+        output["emotion"] = str(list_emotion)
+        now = time.time()
+        print("Tixxxxxxxxxxxxme:",now - program_starts)
+        return output.to_json(orient = "records",force_ascii = False)
 
 if __name__ == '__main__':
     app.run(host = "0.0.0.0",debug=True, port = 4999)
