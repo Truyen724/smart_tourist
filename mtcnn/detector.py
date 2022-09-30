@@ -19,7 +19,7 @@ class MtcnnDetector:
         self.rnet = RNet().to(self.device)
         self.onet = ONet().to(self.device)
 
-    def detect_faces(self, image, min_face_size=20.0,
+    def detect_faces(self, image, min_face_size=60.0,
                      thresholds=[0.6, 0.7, 0.7],
                      nms_thresholds=[0.7, 0.7, 0.7]):
         """
