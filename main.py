@@ -129,7 +129,7 @@ def make_prediction():
         thoitiet = getWeather(body["weather"],body["temperature"])
         for tt in thoitiet:
             dict[tt] = 1
-        dict[body["day_or_night"]] = 1
+        # dict[body["day_or_night"]] = 1
         date_of_birth = body["day_of_birth"].split("/")
         print(date_of_birth)
         chd = hoang_dao(int(date_of_birth[0]),int(date_of_birth[1]))
