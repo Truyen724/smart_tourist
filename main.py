@@ -2,6 +2,7 @@ import pymongo
 import pandas as pd
 import numpy as np
 from numpy import dot
+from datetime import datetime
 from numpy.linalg import norm
 from flask import Flask
 from flask import request
@@ -33,7 +34,18 @@ input_api = {
     "day_or_night": "",  # MORNING, NIGHT, MORNING_A_NIGHT
     "day_of_birth": ""  # 24/3
 }
-
+def get_Morning_Night():
+    now = datetime.now()
+    current_time = now.strftime("%H:%M:%S")
+    print("Gio hien tai =", current_time)
+    time = current_time.split(":")
+    print(time)
+    Ms = "MORNING"
+    hour = int(time[0])
+    if(hour>=16 or hour < 3):
+        return "NIGHT"
+    else:
+        return"MORNING"
 # data = pd.DataFrame()
 # mycol = mydb["dataDestination"]
 # index = 0
@@ -104,8 +116,9 @@ def make_prediction():
         for col in data.columns[start_col:36]:
             # print(col)
             dict[col] = 0
-
         list_emotion = []
+        day_night = get_Morning_Night()
+        dict[day_night] = 1
         try:
             list_emotion = detect_face_base64_mask(body["image"])
         except:
@@ -116,7 +129,6 @@ def make_prediction():
         thoitiet = getWeather(body["weather"],body["temperature"])
         for tt in thoitiet:
             dict[tt] = 1
-        
         dict[body["day_or_night"]] = 1
         date_of_birth = body["day_of_birth"].split("/")
         print(date_of_birth)
@@ -132,7 +144,6 @@ def make_prediction():
         lst_binary = list(dict.values())
         output = get_top_sim(30,lst_binary)
         output["emotion"] = str(list_emotion)
-        print(list_emotion)
         now = time.time()
         print("Tixxxxxxxxxxxxme:",now - program_starts)
         return output.to_json(orient = "records",force_ascii = False)
