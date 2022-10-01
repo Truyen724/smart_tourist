@@ -196,5 +196,5 @@ def main():
     cv2.destroyAllWindows()
 
 if __name__ == "__main__":
-    # main()
+    main()
     detect_face_base64_mask(img_base64_3)
